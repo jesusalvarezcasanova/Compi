@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import pipeline.validation.XMLResolver;
+import pipeline.validation.Resolver;
 
 
 
@@ -14,7 +14,7 @@ public class Main{
 	public void main(String args[]){
 		int threadNumber = Integer.parseInt(args[0]);
 		ExecutorService eS = Executors.newFixedThreadPool(threadNumber);
-		XMLResolver paramResolver = new XMLResolver();
+		Resolver paramResolver = new Resolver();
 		
 		synchronized (this) {
 			

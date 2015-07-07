@@ -1,7 +1,7 @@
 package pipeline.core;
 
 import pipeline.interfaces.Scheduler;
-import pipeline.validation.XMLResolver;
+import pipeline.validation.Resolver;
 
 public class ProgramRunnable implements Runnable{
 	private Program p;
@@ -15,7 +15,7 @@ public class ProgramRunnable implements Runnable{
 	public void run(){
 		//Comprobar si con el XMLResolver se puede resolver el exec del fichero XML
 		//sino excepcion
-		XMLResolver r = new XMLResolver();
+		Resolver r = new Resolver();
 		try{
 			s.programFinished(this.p);
 		}

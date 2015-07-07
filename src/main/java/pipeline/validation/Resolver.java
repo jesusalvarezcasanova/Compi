@@ -1,7 +1,7 @@
 package pipeline.validation;
 
-public class XMLResolver {
+public class Resolver {
 //clase para parsear los parametros ${..} dentro del XML
-	public XMLResolver(){}
+	public Resolver(){}
 	
 }
