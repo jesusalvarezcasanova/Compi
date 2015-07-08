@@ -39,22 +39,4 @@ public class DOMparsing {
 		return builder.parse(new File(documentPath));
 	}
 
-	public static Document validarXSD(String xmlContent, String xsdContent) 
-			throws ParserConfigurationException, SAXException, IOException {
-
-		// Construcción del schema
-		SchemaFactory schemaFactory = 
-				SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = schemaFactory.newSchema(new StreamSource(new StringReader(xsdContent)));
-		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(false);
-		factory.setNamespaceAware(true);
-		factory.setSchema(schema);
-
-		// Se añade el manejador de errores
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setErrorHandler(new SimpleErrorHandler());
-		return builder.parse(new InputSource(new StringReader(xmlContent)));
-	}
 }
