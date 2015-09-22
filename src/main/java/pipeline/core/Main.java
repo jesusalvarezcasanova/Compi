@@ -7,10 +7,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import pipeline.validation.DOMparsing;
+import pipeline.validation.Resolver;
 
 
 
@@ -18,19 +18,18 @@ public class Main{
 
 	public static void main(String args[]){
 
-		//comprobamos si el fichero XML valida con el fichero XSD
 		URL xsdPath = Thread.currentThread().getContextClassLoader().getResource("xsd/pipeline.xsd");
+		Resolver resolver = new Resolver(args[0]);
 
-		if(DOMparsing.validateXMLSchema(args[0], xsdPath.getPath())){
+		if(DOMparsing.validateXMLSchema(args[0], xsdPath.getPath())){//comprobamos si el fichero XML valida con el fichero XSD
 			try{
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document doc = dBuilder.parse(args[0]);
-				NodeList nl = doc.getElementsByTagName("exec");
-				int num = nl.getLength();
-				for(int i=0; i<num;i++){
-					Element node = (Element) nl.item(i);
-					System.out.println(node.getTextContent().trim());
+				//extraemos el contenido de las etiquetas <exec> del fichero XML
+				resolver.solveExecXML(doc.getElementsByTagName("exec"));
+				for(String s: resolver.getExecStrings()){
+					System.out.println(s);
 				}
 			}
 			catch(Exception e){
@@ -57,5 +56,4 @@ public class Main{
 			//		}
 		}
 	}
-
 }

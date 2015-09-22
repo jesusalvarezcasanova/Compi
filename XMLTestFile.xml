@@ -5,19 +5,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<program id="ID-1">
 			<foreach element="file" source="/tmp" as="oneTempFile"/>
 			<exec>
-				comand -p /bin ${example}
+				comand -p /bin ${example   12121dfsdf asdASWEEx e3}
 			</exec>
 		</program>
 		<program id="ID-2" dependsOn="ID-1">
 			<foreach element="file" source="/tmp" as="oneTempFile2"/>
 			<exec>
-				ls -lr ${example2}
+				ls -lr ${example2 321}
 			</exec>
 		</program>
 		<program id="ID-3" dependsOn="ID-1,ID-4">
 			<foreach element="file" source="/tmp" as="oneTempFile3"/>
 			<exec>
-				/usr/bin ${example3}
+				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
 		</program>
 	</programs>

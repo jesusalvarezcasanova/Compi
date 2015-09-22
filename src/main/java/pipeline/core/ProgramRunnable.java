@@ -13,9 +13,8 @@ public class ProgramRunnable implements Runnable{
 	}
 	
 	public void run(){
-		//Comprobar si con el XMLResolver se puede resolver el exec del fichero XML
-		//sino excepcion
-		Resolver r = new Resolver();
+		//Comprobar si con el XMLResolver se puede resolver el exec del fichero XML sino excepcion
+		//Resolver r = new Resolver();
 		try{
 			s.programFinished(this.p);
 		}
