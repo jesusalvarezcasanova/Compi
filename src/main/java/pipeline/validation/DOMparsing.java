@@ -23,7 +23,7 @@ public class DOMparsing {
 					SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new File(xsdPath));
 			Validator validator = schema.newValidator();
-			//validator.setErrorHandler(new SimpleErrorHandler());
+			validator.setErrorHandler(new SimpleErrorHandler());
 			validator.validate(new StreamSource(new File(xmlPath)));
 		} catch (IOException | SAXException e) {
 			System.out.println("Exception: "+e.getMessage());

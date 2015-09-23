@@ -10,16 +10,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import pipeline.validation.DOMparsing;
-import pipeline.validation.Resolver;
+import pipeline.validation.PipelineParser;
 
 
 
-public class Main{
+public class CompiApp{
 
 	public static void main(String args[]){
 
 		URL xsdPath = Thread.currentThread().getContextClassLoader().getResource("xsd/pipeline.xsd");
-		Resolver resolver = new Resolver(args[0]);
+		PipelineParser pipelineParser = new PipelineParser(args[0]);
 
 		if(DOMparsing.validateXMLSchema(args[0], xsdPath.getPath())){//comprobamos si el fichero XML valida con el fichero XSD
 			try{
@@ -27,8 +27,8 @@ public class Main{
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document doc = dBuilder.parse(args[0]);
 				//extraemos el contenido de las etiquetas <exec> del fichero XML
-				resolver.solveExecXML(doc.getElementsByTagName("exec"));
-				for(String s: resolver.getExecStrings()){
+				pipelineParser.solveExecXML(doc.getElementsByTagName("exec"));
+				for(String s: pipelineParser.getExecStrings()){
 					System.out.println(s);
 				}
 			}
@@ -36,24 +36,6 @@ public class Main{
 				e.printStackTrace();
 			}
 
-			//		Resolver paramResolver = new Resolver();
-
-			//		int threadNumber = Integer.parseInt(args[0]);
-			//		ExecutorService eS = Executors.newFixedThreadPool(threadNumber);
-			//		synchronized (this) {
-			//			
-			//		}
-			//		
-			//		Future<?> f = eS.submit();
-			//		try {
-			//			f.get();
-			//		} catch (InterruptedException e) {
-			//			// TODO Auto-generated catch block
-			//			e.printStackTrace();
-			//		} catch (ExecutionException e) {
-			//			// TODO Auto-generated catch block
-			//			e.printStackTrace();
-			//		}
 		}
 	}
 }
