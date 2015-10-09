@@ -1,7 +1,6 @@
 package pipeline.core;
 
 import pipeline.interfaces.Scheduler;
-import pipeline.validation.PipelineParser;
 
 public class ProgramRunnable implements Runnable{
 	private Program p;
