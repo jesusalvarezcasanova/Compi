@@ -11,6 +11,8 @@ public class Program {
 	private String dependsOn;
 	private Foreach foreach;
 	private String exec;
+	private boolean isRunning=false;
+	private boolean isFinished=false;
 
 	@XmlAttribute
 	public String getId() {
@@ -18,7 +20,7 @@ public class Program {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = id.replaceAll(" ","");
 	}
 
 	@XmlAttribute
@@ -27,7 +29,7 @@ public class Program {
 	}
 
 	public void setDependsOn(String dependsOn) {
-		this.dependsOn = dependsOn;
+		this.dependsOn = dependsOn.replaceAll(" ","");
 	}
 
 	@XmlElement
@@ -47,8 +49,22 @@ public class Program {
 	public void setExec(String exec) {
 		this.exec = exec;
 	}
+	
+	public boolean isRunning() {
+		return isRunning;
+	}
 
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
 
+	public boolean isFinished() {
+		return isFinished;
+	}
+
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

@@ -13,7 +13,7 @@ public class PipelineParser {
 	private ArrayList <String> execStrings;
 	
 	//clase para parsear los parametros ${..} dentro del XML
-	public PipelineParser(String fichero){
+	public PipelineParser(final String fichero){
 		this.ficheroXML = fichero;
 		this.execStrings = new ArrayList<String>();
 	}

@@ -6,7 +6,7 @@ public class ProgramRunnable implements Runnable{
 	private Program p;
 	private Scheduler s;
 	
-	public ProgramRunnable(Program p, Scheduler s) {
+	public ProgramRunnable(final Program p, final Scheduler s) {
 		this.p=p;
 		this.s=s;
 	}

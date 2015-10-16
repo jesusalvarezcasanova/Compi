@@ -11,7 +11,7 @@ public class Param {
 
 	public Param() {}
 
-	public Param(String type, String name) {
+	public Param(final String type, final String name) {
 		this.type=type;
 		this.name=name;
 	}
