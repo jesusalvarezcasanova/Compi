@@ -7,18 +7,18 @@
 				comand -p /bin ${example 12121dfsdf asdASWEEx e3} ${i} asdas
 			</exec>
 		</program>
-		<program id="ID-2" dependsOn="ID-1">
+		<program id="ID-2" dependsOn="ID-1" fileLog="output.txt">
 			<foreach element="file" source="/tmp" as="oneTempFile2" />
 			<exec>
 				ls -lr ${example2 321} ${i}
 			</exec>
 		</program>
-		<program id="ID-3" dependsOn="ID-2">
+		<program id="ID-3" dependsOn="ID-2" fileErrorLog="error.txt">
 			<exec>
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
 		</program>
-		<program id="ID-4" dependsOn="ID-2">
+		<program id="ID-4" dependsOn="ID-22">
 			<exec>
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>

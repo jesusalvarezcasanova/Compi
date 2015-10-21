@@ -33,7 +33,7 @@ public class CompiApp{
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 				Document doc = dBuilder.parse(xmlFile);
-				
+
 				//extraemos el contenido de las etiquetas <exec> del fichero XML
 				pipelineParser.solveExecXML(doc.getElementsByTagName("exec"));
 
@@ -42,21 +42,20 @@ public class CompiApp{
 				//Obtenemos todos los programas y parametros del fichero XML
 				Pipeline pipeline = (Pipeline) jaxbUnmarshaller.unmarshal(new File(xmlFile));
 				ProgramManager programManager = new ProgramManager(pipeline);
-
+				System.out.println(programManager.getProgramsLeft().size());
 				//PRUEBA DE FUNCIONAMIENTO DEL ALGORITMO DE EJECUCION
 				while(!programManager.getProgramsLeft().isEmpty()){
 					for(Program pr : programManager.getRunnablePrograms()){
-						System.out.println(pr.getId());
+						System.out.println(pr.toString());
 						programManager.getDAG().get(pr.getId()).setFinished(true);
 					}
 					try {
 						Thread.currentThread();
-						Thread.sleep(1000);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-
 				System.out.println("FIN MAIN");
 			} catch (ParserConfigurationException e) {
 				e.printStackTrace();

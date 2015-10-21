@@ -11,6 +11,8 @@ public class Program {
 	private String dependsOn;
 	private Foreach foreach;
 	private String exec;
+	private String fileLog;
+	private String fileErrorLog;
 	private boolean isRunning=false;
 	private boolean isFinished=false;
 
@@ -30,6 +32,24 @@ public class Program {
 
 	public void setDependsOn(String dependsOn) {
 		this.dependsOn = dependsOn.replaceAll(" ","");
+	}
+	
+	@XmlAttribute
+	public String getFileLog() {
+		return fileLog;
+	}
+
+	public void setFileLog(String fileLog) {
+		this.fileLog = fileLog;
+	}
+
+	@XmlAttribute
+	public String getFileErrorLog() {
+		return fileErrorLog;
+	}
+
+	public void setFileErrorLog(String fileErrorLog) {
+		this.fileErrorLog = fileErrorLog;
 	}
 
 	@XmlElement
@@ -70,6 +90,12 @@ public class Program {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Id: " + this.getId() + "\n");
 		sb.append("DependsOn: " + this.getDependsOn() + "\n");
+		if(this.fileLog!=null){
+			sb.append("File log : "+this.fileLog + "\n");
+		}
+		if(this.fileErrorLog!=null){
+			sb.append("File errorlog : "+this.fileErrorLog + "\n");
+		}
 		if(this.getForeach()!=null){
 			sb.append("Foreach element: " + this.getForeach().getElement() + "\n");
 			sb.append("Foreach source: " + this.getForeach().getSource() + "\n");

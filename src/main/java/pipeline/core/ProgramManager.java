@@ -17,6 +17,7 @@ public class ProgramManager {
 			this.DAG.put(p.getId(),p);
 			programsLeft.add(p.getId());
 		}
+		checkDependsOnIds();
 		this.firstExecution=true;
 	}
 
@@ -70,6 +71,19 @@ public class ProgramManager {
 		} else {
 			return false;
 		}
+	}
+
+	//comprueba si los ids que hay en dependsOn existen
+	public boolean checkDependsOnIds() throws IllegalArgumentException{
+		for(String programs: this.programsLeft){
+			String[] dependsArray = DAG.get(programs).getDependsOn().split(",");
+			for(String s: dependsArray){
+				if(!DAG.containsKey(s)){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
