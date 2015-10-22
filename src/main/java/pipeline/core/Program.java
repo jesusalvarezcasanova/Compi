@@ -1,5 +1,8 @@
 package pipeline.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,6 +14,7 @@ public class Program {
 	private String dependsOn;
 	private Foreach foreach;
 	private String exec;
+	private List<String> parsedExec = new ArrayList<String>();
 	private String fileLog;
 	private String fileErrorLog;
 	private boolean isRunning=false;
@@ -67,7 +71,7 @@ public class Program {
 	}
 
 	public void setExec(String exec) {
-		this.exec = exec;
+		this.exec = exec.trim();
 	}
 	
 	public boolean isRunning() {
@@ -84,6 +88,14 @@ public class Program {
 
 	public void setFinished(boolean isFinished) {
 		this.isFinished = isFinished;
+	}
+	
+	public List<String> getParsedExec() {
+		return parsedExec;
+	}
+
+	public void setParsedExec(List<String> parsedExec) {
+		this.parsedExec = parsedExec;
 	}
 
 	public String toString() {

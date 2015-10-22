@@ -18,7 +18,7 @@
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
 		</program>
-		<program id="ID-4" dependsOn="ID-22">
+		<program id="ID-4" dependsOn="ID-2">
 			<exec>
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>

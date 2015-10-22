@@ -15,10 +15,10 @@ public class ProgramManager {
 	public ProgramManager(final Pipeline pipeline) {
 		for(Program p: pipeline.getPrograms()){
 			this.DAG.put(p.getId(),p);
-			programsLeft.add(p.getId());
+			this.programsLeft.add(p.getId());
 		}
-		checkDependsOnIds();
 		this.firstExecution=true;
+		checkDependsOnIds();
 	}
 
 	public Map<String, Program> getDAG() {
@@ -74,16 +74,18 @@ public class ProgramManager {
 	}
 
 	//comprueba si los ids que hay en dependsOn existen
-	public boolean checkDependsOnIds() throws IllegalArgumentException{
-		for(String programs: this.programsLeft){
-			String[] dependsArray = DAG.get(programs).getDependsOn().split(",");
-			for(String s: dependsArray){
-				if(!DAG.containsKey(s)){
-					return false;
+	public void checkDependsOnIds() {
+		for(String programs : this.programsLeft){
+			Program program = DAG.get(programs);
+			if(program.getDependsOn()!=null){
+				String[] dependsArray = program.getDependsOn().split(",");
+				for(String s: dependsArray){
+					if(!DAG.containsKey(s)){
+						throw new IllegalArgumentException("El/los IDs contenidos en el atributo dependsOn del programa "+program.getId()+" no son correctos");
+					}
 				}
 			}
 		}
-		return true;
 	}
 
 }
