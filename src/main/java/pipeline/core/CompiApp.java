@@ -36,7 +36,7 @@ public class CompiApp{
 				//PRUEBA DE FUNCIONAMIENTO DEL ALGORITMO DE EJECUCION
 				while(!programManager.getProgramsLeft().isEmpty()){
 					for(Program pr : programManager.getRunnablePrograms()){
-						System.out.println(pr.getParsedExec());
+						System.out.println(pr.getId());
 						programManager.getDAG().get(pr.getId()).setFinished(true);
 					}
 					try {

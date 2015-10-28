@@ -44,12 +44,12 @@
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
 		</program>
-		<program id="ID-9" dependsOn="ID-7">
+		<program id="programa9" dependsOn="ID-7">
 			<exec>
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
 		</program>
-		<program id="ID-10" dependsOn="ID-8">
+		<program id="NODE10" dependsOn="ID-8">
 			<exec>
 				/usr/bin ${example3 asda s343} earsdasd
 			</exec>
