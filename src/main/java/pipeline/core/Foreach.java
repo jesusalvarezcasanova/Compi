@@ -3,7 +3,7 @@ package pipeline.core;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="foreach")
+@XmlRootElement(name = "foreach")
 public class Foreach {
 
 	private String element;

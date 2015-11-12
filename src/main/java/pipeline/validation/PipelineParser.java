@@ -8,28 +8,17 @@ import pipeline.core.Program;
 
 public class PipelineParser {
 
-	private String ficheroXML;
-
-	//clase para parsear los parametros ${..} dentro del XML
-	public PipelineParser(final String fichero){
-		this.ficheroXML = fichero;
-	}
-
-	public String getFicheroXML() {
-		return ficheroXML;
-	}
-
-	public void solveExec(List<Program> programs){
-		for(Program program : programs){
+	public void solveExec(List<Program> programs) {
+		for (Program program : programs) {
 			cleanExec(program);
 		}
 	}
 
-	private void cleanExec(Program program){
+	public void cleanExec(Program program) {
 		Pattern p = Pattern.compile("\\{(.*?)\\}");
 		Matcher m = p.matcher(program.getExec());
-		while(m.find()){
-			program.getParsedExec().add(m.group(1));
+		while (m.find()) {
+			program.getExecStrings().add(m.group(1));
 		}
 	}
 }

@@ -7,21 +7,22 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="pipeline")
+@XmlRootElement(name = "pipeline")
 public class Pipeline {
 
 	private List<Program> programs = new LinkedList<Program>();
 	private List<Param> params = new LinkedList<Param>();
-	
-	public Pipeline() {}
-	
-	public Pipeline(final List<Program> programs, final List<Param> params) {
-		this.programs=programs;
-		this.params=params;
+
+	public Pipeline() {
 	}
 
-	@XmlElementWrapper(name="programs")
-	@XmlElement(name="program")
+	public Pipeline(final List<Program> programs, final List<Param> params) {
+		this.programs = programs;
+		this.params = params;
+	}
+
+	@XmlElementWrapper(name = "programs")
+	@XmlElement(name = "program")
 	public List<Program> getPrograms() {
 		return programs;
 	}
@@ -30,8 +31,8 @@ public class Pipeline {
 		this.programs = programs;
 	}
 
-	@XmlElementWrapper(name="params")
-	@XmlElement(name="param")
+	@XmlElementWrapper(name = "params")
+	@XmlElement(name = "param")
 	public List<Param> getParams() {
 		return params;
 	}

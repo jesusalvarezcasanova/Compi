@@ -13,16 +13,15 @@ import org.xml.sax.SAXException;
 
 public class DOMparsing {
 
-	public static boolean validateXMLSchema(String xmlPath, String xsdPath){
+	public static boolean validateXMLSchema(String xmlPath, String xsdPath) {
 		try {
-			SchemaFactory factory = 
-					SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new File(xsdPath));
 			Validator validator = schema.newValidator();
 			validator.setErrorHandler(new SimpleErrorHandler());
 			validator.validate(new StreamSource(new File(xmlPath)));
 		} catch (IOException | SAXException e) {
-			System.out.println("Exception: "+e.getMessage());
+			System.out.println("Exception: " + e.getMessage());
 			return false;
 		}
 		return true;

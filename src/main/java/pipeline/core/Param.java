@@ -3,17 +3,18 @@ package pipeline.core;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="param")
+@XmlRootElement(name = "param")
 public class Param {
 
 	private String type;
 	private String name;
 
-	public Param() {}
+	public Param() {
+	}
 
 	public Param(final String type, final String name) {
-		this.type=type;
-		this.name=name;
+		this.type = type;
+		this.name = name;
 	}
 
 	@XmlAttribute

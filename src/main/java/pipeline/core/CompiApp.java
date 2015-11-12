@@ -9,47 +9,50 @@ import javax.xml.bind.Unmarshaller;
 
 import pipeline.validation.DOMparsing;
 import pipeline.validation.PipelineParser;
+import pipeline.validation.Resolver;
 
+public class CompiApp {
 
+	public static void main(String args[]) {
 
-public class CompiApp{
-
-	public static void main(String args[]){
-
-		final String xmlFile = args[0];
+		final String xmlPipelineFile = args[0];
+		final String xmlParamsFile = args[1];
 		final URL xsdPath = Thread.currentThread().getContextClassLoader().getResource("xsd/pipeline.xsd");
-		final PipelineParser pipelineParser = new PipelineParser(xmlFile);
 
-		//comprobamos si el fichero XML valida con el fichero XSD
-		if(DOMparsing.validateXMLSchema(xmlFile, xsdPath.getPath())){
+		// comprobamos si el fichero XML valida con el fichero XSD
+		if (DOMparsing.validateXMLSchema(xmlPipelineFile, xsdPath.getPath())) {
 			try {
-				JAXBContext jaxbContext = JAXBContext.newInstance(Pipeline.class);  
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller(); 
-
-				//Obtenemos todos los programas y parametros del fichero XML
-				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller.unmarshal(new File(xmlFile));
+				JAXBContext jaxbContext = JAXBContext.newInstance(Pipeline.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				// obtenemos los programas y parametros del fichero XML
+				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller.unmarshal(new File(xmlPipelineFile));
 				final ProgramManager programManager = new ProgramManager(pipeline);
+				final PipelineParser pipelineParser = new PipelineParser();
+				final Resolver resolver = new Resolver(xmlParamsFile);
 
-				//extraemos el contenido de las etiquetas <exec> del fichero XML
+				// comprobamos que los Ids que estan en la etiqueta dependsOn
+				// existen
+				programManager.checkDependsOnIds();
 				pipelineParser.solveExec(pipeline.getPrograms());
-
-				//PRUEBA DE FUNCIONAMIENTO DEL ALGORITMO DE EJECUCION
-				while(!programManager.getProgramsLeft().isEmpty()){
-					for(Program pr : programManager.getRunnablePrograms()){
-						System.out.println(pr.getId());
-						programManager.getDAG().get(pr.getId()).setFinished(true);
-					}
-					try {
-						Thread.currentThread();
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				for (Program p : pipeline.getPrograms()) {
+					for (String s : p.getExecStrings()) {
+						resolver.resolveToExecute(p, s);
 					}
 				}
+				for (Program p: pipeline.getPrograms()) {
+					System.out.println(p.getToExecute());
+				}
+				
+				// while (!programManager.getProgramsLeft().isEmpty()) {
+				// for (Program pr : programManager.getRunnablePrograms()) {
+				// System.out.println(pr.getId());
+				// programManager.getDAG().get(pr.getId()).setFinished(true);
+				// }
+				// }
 				System.out.println("FIN MAIN");
 			} catch (JAXBException e) {
 				e.printStackTrace();
 			}
-		}//cierre if validacion XML
-	}//cierre main
+		} // cierre if validacion XML
+	}// cierre main
 }

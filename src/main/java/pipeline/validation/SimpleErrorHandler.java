@@ -5,7 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class SimpleErrorHandler implements ErrorHandler {
-	
+
 	public void warning(SAXParseException exception) throws SAXException {
 		exception.printStackTrace();
 	}
