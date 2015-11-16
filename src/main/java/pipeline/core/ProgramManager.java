@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import pipeline.validation.PipelineParser;
-
 public class ProgramManager {
 
 	// Directed Acyclic Graph
@@ -27,10 +25,6 @@ public class ProgramManager {
 		return DAG;
 	}
 
-	public void setDAG(Map<String, Program> dAG) {
-		DAG = dAG;
-	}
-
 	public List<String> getProgramsLeft() {
 		return programsLeft;
 	}
@@ -40,6 +34,7 @@ public class ProgramManager {
 		if (this.firstExecution) {
 			this.firstExecution = false;
 			for (Map.Entry<String, Program> entry : DAG.entrySet()) {
+				// si no tiene dependencias se puede ejecutar
 				if (entry.getValue().getDependsOn() == null) {
 					this.runnablePrograms.add(entry.getValue());
 					this.programsLeft.remove(entry.getKey());
