@@ -33,7 +33,7 @@ public class ProgramRunnable implements Runnable {
 								out.write(line + System.getProperty("line.separator"));
 							}
 						} catch (Exception e) {
-							throw new Error(e);
+							// throw new Error(e);
 						}
 						try {
 							out.flush();
@@ -55,7 +55,7 @@ public class ProgramRunnable implements Runnable {
 								err.write(line + System.getProperty("line.separator"));
 							}
 						} catch (Exception e) {
-							throw new Error(e);
+							// throw new Error(e);
 						}
 						try {
 							err.flush();

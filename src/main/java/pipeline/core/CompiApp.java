@@ -61,8 +61,11 @@ public class CompiApp {
 						future.get();
 					}
 				}
-				CompiApp.class.wait();
-				CompiApp.class.notify();
+
+				Thread.currentThread().wait();
+				Thread.currentThread().notify();
+				// CompiApp.class.wait();
+				// CompiApp.class.notify();
 
 				System.out.println("------Fin programa------");
 			} catch (JAXBException | InterruptedException | ExecutionException e) {
