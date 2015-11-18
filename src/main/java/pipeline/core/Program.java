@@ -128,8 +128,10 @@ public class Program {
 			sb.append("File errorlog : " + this.fileErrorLog + "\n");
 		}
 		if (this.getForeach() != null) {
-			sb.append("Foreach element: " + this.getForeach().getElement() + "\n");
-			sb.append("Foreach source: " + this.getForeach().getSource() + "\n");
+			sb.append("Foreach element: " + this.getForeach().getElement()
+					+ "\n");
+			sb.append(
+					"Foreach source: " + this.getForeach().getSource() + "\n");
 			sb.append("Foreach as: " + this.getForeach().getAs() + "\n");
 		} else {
 			sb.append("Foreach: " + this.getForeach() + "\n");

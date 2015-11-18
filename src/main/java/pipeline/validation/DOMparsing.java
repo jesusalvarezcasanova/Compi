@@ -15,7 +15,8 @@ public class DOMparsing {
 
 	public static boolean validateXMLSchema(String xmlPath, String xsdPath) {
 		try {
-			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory factory = SchemaFactory
+					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(new File(xsdPath));
 			Validator validator = schema.newValidator();
 			validator.setErrorHandler(new SimpleErrorHandler());

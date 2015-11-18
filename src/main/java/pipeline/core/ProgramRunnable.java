@@ -17,20 +17,25 @@ public class ProgramRunnable implements Runnable {
 
 	public void run() {
 		try {
-			Process process = Runtime.getRuntime().exec(this.program.getToExecute());
-			final BufferedReader stdOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			final BufferedReader stdErr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			Process process = Runtime.getRuntime()
+					.exec(this.program.getToExecute());
+			final BufferedReader stdOut = new BufferedReader(
+					new InputStreamReader(process.getInputStream()));
+			final BufferedReader stdErr = new BufferedReader(
+					new InputStreamReader(process.getErrorStream()));
 			// creamos un hilos para la salida estandar
 			if (this.program.getFileLog() != null) {
-				BufferedWriter out = new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(this.program.getFileLog()), "utf-8"));
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(this.program.getFileLog()),
+						"utf-8"));
 				// Thread that reads std out and feeds the writer given in input
 				new Thread() {
 					public void run() {
 						String line;
 						try {
 							while ((line = stdOut.readLine()) != null) {
-								out.write(line + System.getProperty("line.separator"));
+								out.write(line
+										+ System.getProperty("line.separator"));
 							}
 						} catch (Exception e) {
 							// throw new Error(e);
@@ -45,14 +50,16 @@ public class ProgramRunnable implements Runnable {
 			}
 			// creamos un hilos para la salida de error
 			if (this.program.getFileErrorLog() != null) {
-				BufferedWriter err = new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(this.program.getFileErrorLog()), "utf-8"));
+				BufferedWriter err = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(this.program.getFileErrorLog()),
+						"utf-8"));
 				new Thread() {
 					public void run() {
 						String line;
 						try {
 							while ((line = stdErr.readLine()) != null) {
-								err.write(line + System.getProperty("line.separator"));
+								err.write(line
+										+ System.getProperty("line.separator"));
 							}
 						} catch (Exception e) {
 							// throw new Error(e);

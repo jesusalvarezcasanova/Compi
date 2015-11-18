@@ -23,19 +23,25 @@ public class CompiApp {
 		final String xmlParamsFile = args[1];
 		final String threadNumber = args[2];
 		System.out.println(threadNumber);
-		final URL xsdPath = Thread.currentThread().getContextClassLoader().getResource("xsd/pipeline.xsd");
+		final URL xsdPath = Thread.currentThread().getContextClassLoader()
+				.getResource("xsd/pipeline.xsd");
 
 		// comprobamos si el fichero XML valida con el fichero XSD
 		if (DOMparsing.validateXMLSchema(xmlPipelineFile, xsdPath.getPath())) {
 			try {
-				JAXBContext jaxbContext = JAXBContext.newInstance(Pipeline.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				JAXBContext jaxbContext = JAXBContext
+						.newInstance(Pipeline.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext
+						.createUnmarshaller();
 				// obtenemos los programas y parametros del fichero XML
-				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller.unmarshal(new File(xmlPipelineFile));
-				final ProgramManager programManager = new ProgramManager(pipeline);
+				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller
+						.unmarshal(new File(xmlPipelineFile));
+				final ProgramManager programManager = new ProgramManager(
+						pipeline);
 				final PipelineParser pipelineParser = new PipelineParser();
 				final Resolver resolver = new Resolver(xmlParamsFile);
-				ExecutorService executorService = Executors.newFixedThreadPool(Integer.parseInt(threadNumber));
+				ExecutorService executorService = Executors
+						.newFixedThreadPool(Integer.parseInt(threadNumber));
 				// comprobamos que los Ids que estan en la etiqueta dependsOn
 				// existen
 				// programManager.checkDependsOnIds();
@@ -52,7 +58,8 @@ public class CompiApp {
 
 				while (!programManager.getProgramsLeft().isEmpty()) {
 					for (Program p : programManager.getRunnablePrograms()) {
-						ProgramRunnable programRunnable = new ProgramRunnable(p);
+						ProgramRunnable programRunnable = new ProgramRunnable(
+								p);
 						executorService.submit(programRunnable);
 						// marcamos el programa actual con el flag de
 						// ejecucion
@@ -68,7 +75,8 @@ public class CompiApp {
 				// CompiApp.class.notify();
 
 				System.out.println("------Fin programa------");
-			} catch (JAXBException | InterruptedException | ExecutionException e) {
+			} catch (JAXBException | InterruptedException
+					| ExecutionException e) {
 				e.printStackTrace();
 			}
 		} // cierre

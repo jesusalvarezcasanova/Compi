@@ -79,7 +79,8 @@ public class ProgramManager {
 				for (String s : dependsArray) {
 					if (!DAG.containsKey(s)) {
 						throw new IllegalArgumentException(
-								"El/los IDs contenidos en el atributo dependsOn del programa " + program.getId()
+								"El/los IDs contenidos en el atributo dependsOn del programa "
+										+ program.getId()
 										+ " no son correctos");
 					}
 				}
