@@ -27,7 +27,7 @@ public class Program {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id.replaceAll(" ", "");
 	}
 
@@ -36,7 +36,7 @@ public class Program {
 		return dependsOn;
 	}
 
-	public void setDependsOn(String dependsOn) {
+	public void setDependsOn(final String dependsOn) {
 		this.dependsOn = dependsOn.replaceAll(" ", "");
 	}
 
@@ -45,7 +45,7 @@ public class Program {
 		return fileLog;
 	}
 
-	public void setFileLog(String fileLog) {
+	public void setFileLog(final String fileLog) {
 		this.fileLog = fileLog;
 	}
 
@@ -54,7 +54,7 @@ public class Program {
 		return fileErrorLog;
 	}
 
-	public void setFileErrorLog(String fileErrorLog) {
+	public void setFileErrorLog(final String fileErrorLog) {
 		this.fileErrorLog = fileErrorLog;
 	}
 
@@ -63,7 +63,7 @@ public class Program {
 		return foreach;
 	}
 
-	public void setForeach(Foreach foreach) {
+	public void setForeach(final Foreach foreach) {
 		this.foreach = foreach;
 	}
 
@@ -72,7 +72,7 @@ public class Program {
 		return exec;
 	}
 
-	public void setExec(String exec) {
+	public void setExec(final String exec) {
 		this.exec = exec.trim();
 		this.toExecute = this.exec;
 	}
@@ -81,7 +81,7 @@ public class Program {
 		return isRunning;
 	}
 
-	public void setRunning(boolean isRunning) {
+	public void setRunning(final boolean isRunning) {
 		this.isRunning = isRunning;
 	}
 
@@ -89,7 +89,7 @@ public class Program {
 		return isFinished;
 	}
 
-	public void setFinished(boolean isFinished) {
+	public void setFinished(final boolean isFinished) {
 		this.isFinished = isFinished;
 	}
 
@@ -97,7 +97,7 @@ public class Program {
 		return execStrings;
 	}
 
-	public void setExecStrings(List<String> execStrings) {
+	public void setExecStrings(final List<String> execStrings) {
 		this.execStrings = execStrings;
 	}
 
@@ -105,7 +105,7 @@ public class Program {
 		return toExecute;
 	}
 
-	public void setToExecute(String toExecute) {
+	public void setToExecute(final String toExecute) {
 		this.toExecute = toExecute;
 	}
 
@@ -113,14 +113,17 @@ public class Program {
 		return isAborted;
 	}
 
-	public void setAborted(boolean isAborted) {
+	public void setAborted(final boolean isAborted) {
 		this.isAborted = isAborted;
 	}
 
+	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Id: " + this.getId() + "\n");
-		sb.append("DependsOn: " + this.getDependsOn() + "\n");
+		if (this.getDependsOn() != null) {
+			sb.append("DependsOn: " + this.getDependsOn() + "\n");
+		}
 		if (this.fileLog != null) {
 			sb.append("File log : " + this.fileLog + "\n");
 		}
@@ -137,7 +140,7 @@ public class Program {
 			sb.append("Foreach: " + this.getForeach() + "\n");
 		}
 		sb.append("Exec: " + this.getExec().trim() + "\n");
-		for (String s : this.getExecStrings()) {
+		for (final String s : this.getExecStrings()) {
 			sb.append("Exec strings: " + s + "\n");
 		}
 		sb.append("To execute: " + this.getToExecute() + "\n");

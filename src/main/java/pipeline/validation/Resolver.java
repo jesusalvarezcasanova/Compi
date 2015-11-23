@@ -17,37 +17,37 @@ import pipeline.core.Program;
 
 public class Resolver {
 
-	private String xmlParamsFile;
+	private final String xmlParamsFile;
 
-	public Resolver(String file) {
+	public Resolver(final String file) {
 		this.xmlParamsFile = file;
 	}
 
-	public void resolveToExecute(Program p, String tag) {
-		String parsed = resolveString(tag);
+	public void resolveToExecute(final Program p, final String tag) {
+		final String parsed = resolveString(tag);
 		p.setToExecute(p.getToExecute().replace("${" + tag + "}", parsed));
 	}
 
-	private String resolveString(String tag) {
+	private String resolveString(final String tag) {
 		String resolvedString = new String();
 		try {
-			File xmlFile = new File(this.xmlParamsFile);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+			final File xmlFile = new File(this.xmlParamsFile);
+			final DocumentBuilderFactory dbFactory = DocumentBuilderFactory
 					.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(xmlFile);
+			final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			final Document doc = dBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
 
-			NodeList nodeList = doc.getElementsByTagName(tag);
+			final NodeList nodeList = doc.getElementsByTagName(tag);
 			if (nodeList.getLength() == 0) {
 				throw new IllegalArgumentException("El tag: " + tag
 						+ " no existe en el fichero " + this.xmlParamsFile);
 			}
 
 			for (int i = 0; i < nodeList.getLength(); i++) {
-				Node node = nodeList.item(i);
+				final Node node = nodeList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					Element element = (Element) node;
+					final Element element = (Element) node;
 					resolvedString = element.getTextContent();
 				}
 			}

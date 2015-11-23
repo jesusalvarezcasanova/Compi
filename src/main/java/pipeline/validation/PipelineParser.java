@@ -8,15 +8,15 @@ import pipeline.core.Program;
 
 public class PipelineParser {
 
-	public void solveExec(List<Program> programs) {
-		for (Program program : programs) {
+	public void solveExec(final List<Program> programs) {
+		for (final Program program : programs) {
 			cleanExec(program);
 		}
 	}
 
-	public void cleanExec(Program program) {
-		Pattern p = Pattern.compile("\\{(.*?)\\}");
-		Matcher m = p.matcher(program.getExec());
+	public void cleanExec(final Program program) {
+		final Pattern p = Pattern.compile("\\{(.*?)\\}");
+		final Matcher m = p.matcher(program.getExec());
 		while (m.find()) {
 			program.getExecStrings().add(m.group(1));
 		}

@@ -15,23 +15,27 @@ import pipeline.validation.DOMparsing;
 import pipeline.validation.PipelineParser;
 import pipeline.validation.Resolver;
 
-public class CompiApp {
+public class CompiApp implements Runnable {
 
-	public synchronized static void main(String args[]) {
+	private final String[] args;
 
-		final String xmlPipelineFile = args[0];
-		final String xmlParamsFile = args[1];
-		final String threadNumber = args[2];
-		System.out.println(threadNumber);
+	public CompiApp(final String[] args) {
+		this.args = args;
+	}
+
+	@Override
+	public void run() {
+		final String xmlPipelineFile = this.args[0];
+		final String xmlParamsFile = this.args[1];
+		final String threadNumber = this.args[2];
 		final URL xsdPath = Thread.currentThread().getContextClassLoader()
 				.getResource("xsd/pipeline.xsd");
-
 		// comprobamos si el fichero XML valida con el fichero XSD
 		if (DOMparsing.validateXMLSchema(xmlPipelineFile, xsdPath.getPath())) {
 			try {
-				JAXBContext jaxbContext = JAXBContext
+				final JAXBContext jaxbContext = JAXBContext
 						.newInstance(Pipeline.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext
+				final Unmarshaller jaxbUnmarshaller = jaxbContext
 						.createUnmarshaller();
 				// obtenemos los programas y parametros del fichero XML
 				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller
@@ -40,7 +44,7 @@ public class CompiApp {
 						pipeline);
 				final PipelineParser pipelineParser = new PipelineParser();
 				final Resolver resolver = new Resolver(xmlParamsFile);
-				ExecutorService executorService = Executors
+				final ExecutorService executorService = Executors
 						.newFixedThreadPool(Integer.parseInt(threadNumber));
 				// comprobamos que los Ids que estan en la etiqueta dependsOn
 				// existen
@@ -48,41 +52,35 @@ public class CompiApp {
 				pipelineParser.solveExec(pipeline.getPrograms());
 				// obtenemos la linea final de ejecucion resolviendo la etiqueta
 				// <exec> con los parametros del fichero XML
-				for (Program p : pipeline.getPrograms()) {
-					for (String s : p.getExecStrings()) {
-						// System.out.println(p.getToExecute());
+				for (final Program p : pipeline.getPrograms()) {
+					for (final String s : p.getExecStrings()) {
 						resolver.resolveToExecute(p, s);
 					}
 				}
 				// bloque de ejecucion
-
-				while (!programManager.getProgramsLeft().isEmpty()) {
-					for (Program p : programManager.getRunnablePrograms()) {
-						ProgramRunnable programRunnable = new ProgramRunnable(
-								p);
-						executorService.submit(programRunnable);
-						// marcamos el programa actual con el flag de
-						// ejecucion
-						p.setRunning(true);
-						Future future = executorService.submit(programRunnable);
-						future.get();
+				synchronized (this) {
+					while (!programManager.getProgramsLeft().isEmpty()) {
+						for (final Program p : programManager
+								.getRunnablePrograms()) {
+							final ProgramRunnable programRunnable = new ProgramRunnable(
+									p,programManager);
+							executorService.submit(programRunnable);
+							// marcamos el programa actual con el flag de
+							// ejecucion
+							p.setRunning(true);
+							final Future future = executorService
+									.submit(programRunnable);
+							future.get();
+						}
 					}
-				}
-
-				Thread.currentThread().wait();
-				Thread.currentThread().notify();
-				// CompiApp.class.wait();
-				// CompiApp.class.notify();
-
+					this.wait();
+				} // cierre synchronized
+				this.notify();
 				System.out.println("------Fin programa------");
 			} catch (JAXBException | InterruptedException
 					| ExecutionException e) {
 				e.printStackTrace();
 			}
-		} // cierre
-			// if
-			// validacion
-			// XML
-	}// cierre main
-
+		} // cierre if validacion XML
+	}// cierre run
 }

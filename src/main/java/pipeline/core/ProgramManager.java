@@ -8,13 +8,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProgramManager {
 
 	// Directed Acyclic Graph
-	private Map<String, Program> DAG = new ConcurrentHashMap<String, Program>();
-	private List<String> programsLeft = new CopyOnWriteArrayList<String>();
-	private List<Program> runnablePrograms = new CopyOnWriteArrayList<Program>();
+	private final Map<String, Program> DAG = new ConcurrentHashMap<String, Program>();
+	private final List<String> programsLeft = new CopyOnWriteArrayList<String>();
+	private final List<Program> runnablePrograms = new CopyOnWriteArrayList<Program>();
 	private boolean firstExecution;
 
 	public ProgramManager(final Pipeline pipeline) {
-		for (Program p : pipeline.getPrograms()) {
+		for (final Program p : pipeline.getPrograms()) {
 			this.DAG.put(p.getId(), p);
 			this.programsLeft.add(p.getId());
 		}
@@ -33,19 +33,19 @@ public class ProgramManager {
 		this.runnablePrograms.clear();
 		if (this.firstExecution) {
 			this.firstExecution = false;
-			for (Map.Entry<String, Program> entry : DAG.entrySet()) {
+			for (final Map.Entry<String, Program> entry : DAG.entrySet()) {
 				// si no tiene dependencias se puede ejecutar
 				if (entry.getValue().getDependsOn() == null) {
 					this.runnablePrograms.add(entry.getValue());
-					this.programsLeft.remove(entry.getKey());
 				}
 			}
 		} else {
-			for (String programId : this.programsLeft) {
-				Program p = DAG.get(programId);
-				if (checkProgramDependencies(p)) {
-					this.runnablePrograms.add(p);
-					this.programsLeft.remove(p.getId());
+			for (final String programId : this.programsLeft) {
+				final Program p = DAG.get(programId);
+				if (p.getDependsOn() != null) {
+					if (checkProgramDependencies(p)) {
+						this.runnablePrograms.add(p);
+					}
 				}
 			}
 		}
@@ -54,11 +54,11 @@ public class ProgramManager {
 
 	// recorre las dependencias del programa y comprueba si estas tienen el
 	// atributo isFinished a true
-	private boolean checkProgramDependencies(Program program) {
+	private boolean checkProgramDependencies(final Program program) {
 		int count = 0;
-		String[] dependsArray = program.getDependsOn().split(",");
-		for (String s : dependsArray) {
-			Program p = DAG.get(s);
+		final String[] dependsArray = program.getDependsOn().split(",");
+		for (final String s : dependsArray) {
+			final Program p = DAG.get(s);
 			if (p.isFinished()) {
 				count++;
 			}
@@ -72,11 +72,11 @@ public class ProgramManager {
 
 	// comprueba si los ids que hay en dependsOn existen
 	public void checkDependsOnIds() {
-		for (String programs : this.programsLeft) {
-			Program program = DAG.get(programs);
+		for (final String programs : this.programsLeft) {
+			final Program program = DAG.get(programs);
 			if (program.getDependsOn() != null) {
-				String[] dependsArray = program.getDependsOn().split(",");
-				for (String s : dependsArray) {
+				final String[] dependsArray = program.getDependsOn().split(",");
+				for (final String s : dependsArray) {
 					if (!DAG.containsKey(s)) {
 						throw new IllegalArgumentException(
 								"El/los IDs contenidos en el atributo dependsOn del programa "

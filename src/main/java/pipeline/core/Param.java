@@ -22,7 +22,7 @@ public class Param {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -31,12 +31,13 @@ public class Param {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Name: " + this.getName() + "\n");
 		sb.append("Type: " + this.getType() + "\n");
 		return sb.toString();

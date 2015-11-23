@@ -15,7 +15,7 @@ public class Foreach {
 		return element;
 	}
 
-	public void setElement(String element) {
+	public void setElement(final String element) {
 		this.element = element;
 	}
 
@@ -24,7 +24,7 @@ public class Foreach {
 		return source;
 	}
 
-	public void setSource(String source) {
+	public void setSource(final String source) {
 		this.source = source;
 	}
 
@@ -33,7 +33,7 @@ public class Foreach {
 		return as;
 	}
 
-	public void setAs(String as) {
+	public void setAs(final String as) {
 		this.as = as;
 	}
 }

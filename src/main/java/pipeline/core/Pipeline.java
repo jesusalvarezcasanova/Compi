@@ -27,7 +27,7 @@ public class Pipeline {
 		return programs;
 	}
 
-	public void setPrograms(List<Program> programs) {
+	public void setPrograms(final List<Program> programs) {
 		this.programs = programs;
 	}
 
@@ -37,7 +37,7 @@ public class Pipeline {
 		return params;
 	}
 
-	public void setParams(List<Param> params) {
+	public void setParams(final List<Param> params) {
 		this.params = params;
 	}
 }
