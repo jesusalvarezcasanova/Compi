@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import pipeline.core.App;
 import pipeline.core.CompiApp;
 
 public class PipelineTests {

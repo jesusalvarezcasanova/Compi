@@ -17,6 +17,12 @@ import pipeline.validation.Resolver;
 
 public class CompiApp implements Runnable {
 
+	private Pipeline pipeline;
+	private ProgramManager programManager;
+	private PipelineParser pipelineParser;
+	private Resolver resolver;
+	private ExecutorService executorService;
+	private ProgramRunnable programRunnable;
 	private final String[] args;
 
 	public CompiApp(final String[] args) {
@@ -38,13 +44,12 @@ public class CompiApp implements Runnable {
 				final Unmarshaller jaxbUnmarshaller = jaxbContext
 						.createUnmarshaller();
 				// obtenemos los programas y parametros del fichero XML
-				final Pipeline pipeline = (Pipeline) jaxbUnmarshaller
+				pipeline = (Pipeline) jaxbUnmarshaller
 						.unmarshal(new File(xmlPipelineFile));
-				final ProgramManager programManager = new ProgramManager(
-						pipeline);
-				final PipelineParser pipelineParser = new PipelineParser();
-				final Resolver resolver = new Resolver(xmlParamsFile);
-				final ExecutorService executorService = Executors
+				programManager = new ProgramManager(pipeline);
+				pipelineParser = new PipelineParser();
+				resolver = new Resolver(xmlParamsFile);
+				executorService = Executors
 						.newFixedThreadPool(Integer.parseInt(threadNumber));
 				// comprobamos que los Ids que estan en la etiqueta dependsOn
 				// existen
@@ -62,12 +67,11 @@ public class CompiApp implements Runnable {
 					while (!programManager.getProgramsLeft().isEmpty()) {
 						for (final Program p : programManager
 								.getRunnablePrograms()) {
-							final ProgramRunnable programRunnable = new ProgramRunnable(
-									p,programManager);
-							executorService.submit(programRunnable);
+							programRunnable = new ProgramRunnable(p, this);
 							// marcamos el programa actual con el flag de
 							// ejecucion
 							p.setRunning(true);
+
 							final Future future = executorService
 									.submit(programRunnable);
 							future.get();
@@ -83,4 +87,45 @@ public class CompiApp implements Runnable {
 			}
 		} // cierre if validacion XML
 	}// cierre run
+
+	public Pipeline getPipeline() {
+		return pipeline;
+	}
+
+	public void setPipeline(final Pipeline pipeline) {
+		this.pipeline = pipeline;
+	}
+
+	public ProgramManager getProgramManager() {
+		return programManager;
+	}
+
+	public void setProgramManager(final ProgramManager programManager) {
+		this.programManager = programManager;
+	}
+
+	public PipelineParser getPipelineParser() {
+		return pipelineParser;
+	}
+
+	public void setPipelineParser(final PipelineParser pipelineParser) {
+		this.pipelineParser = pipelineParser;
+	}
+
+	public Resolver getResolver() {
+		return resolver;
+	}
+
+	public void setResolver(final Resolver resolver) {
+		this.resolver = resolver;
+	}
+
+	public ExecutorService getExecutorService() {
+		return executorService;
+	}
+
+	public void setExecutorService(final ExecutorService executorService) {
+		this.executorService = executorService;
+	}
+
 }
