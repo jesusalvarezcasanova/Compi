@@ -10,50 +10,49 @@ import java.io.UnsupportedEncodingException;
 
 public class ProgramRunnable implements Runnable {
 	private final Program program;
-	private boolean running = true;
-	private CompiApp compiApp;
+	private boolean runningProgram = true;
+	private final CompiApp compiApp;
 
-	public ProgramRunnable(final Program p,
-			final CompiApp ca) {
-		this.program = p;
-		this.compiApp = ca;
+	public ProgramRunnable(final Program program, final CompiApp compiapp) {
+		this.program = program;
+		this.compiApp = compiapp;
 	}
 
 	public void finishThread() {
-		this.running = false;
+		this.runningProgram = false;
 	}
 
 	@Override
 	public void run() {
-		while (running) {
-			try {
-				System.out.println(program.isRunning());
-				final Process process = Runtime.getRuntime()
-						.exec(this.program.getToExecute());
+		// while(runningProgram){
+		try {
+			final Process process = Runtime.getRuntime()
+					.exec(this.program.getToExecute());
 
-				// final BufferedReader stdOut = new BufferedReader(
-				// new InputStreamReader(process.getInputStream()));
-				// final BufferedReader stdErr = new BufferedReader(
-				// new InputStreamReader(process.getErrorStream()));
+			// final BufferedReader stdOut = new BufferedReader(
+			// new InputStreamReader(process.getInputStream()));
+			// final BufferedReader stdErr = new BufferedReader(
+			// new InputStreamReader(process.getErrorStream()));
 
-				// creamos un hilos para la salida estandar
-				// startFileLog(stdOut);
+			// creamos un hilos para la salida estandar
+			// startFileLog(stdOut);
 
-				// creamos un hilos para la salida de error
-				// startFileErrorLog(stdErr);
+			// creamos un hilos para la salida de error
+			// startFileErrorLog(stdErr);
 
-				if (process.waitFor() == 0) {
-					finishThread();
-					programFinished(this.program);
-				} else {
-					finishThread();
-					programAborted(this.program);
-				}
-			} catch (IOException | InterruptedException e) {
-				finishThread();
-				programAborted(this.program, e);
+			if (process.waitFor() == 0) {
+				// finishThread();
+				programFinished(this.program);
+			} else {
+				// finishThread();
+				programAborted(this.program);
 			}
+		} catch (IOException | InterruptedException e) {
+			// finishThread();
+			programAborted(this.program, e);
 		}
+		// } //cierre runningProgram
+
 	}
 
 	private void startFileLog(final BufferedReader stdOut)
@@ -114,43 +113,40 @@ public class ProgramRunnable implements Runnable {
 		}
 	}
 
-	public void programFinished(final Program p) {
+	public void programFinished(final Program program) {
 		System.out.println("program finished OK");
 		// marcamos el programa como finalizado
-		// this.programManager.getDAG().get(p.getId()).setFinished(true);
-		// this.programManager.getDAG().get(p.getId()).setRunning(false);
-		// this.programManager.getProgramsLeft().remove(p);
-		// compiApp.setProgramManager(this.programManager);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setFinished(true);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setRunning(false);
-		compiApp.getProgramManager().getProgramsLeft().remove(p);
-		notify();
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setFinished(true);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setRunning(false);
+		compiApp.getProgramManager().getProgramsLeft().remove(program.getId());
 	}
 
-	public void programAborted(final Program p) {
+	public void programAborted(final Program program) {
 		System.out.println("program finished BAD");
 		// marcamos el programa como abortado
-		// this.programManager.getDAG().get(p.getId()).setAborted(true);
-		// this.programManager.getDAG().get(p.getId()).setRunning(false);
-		// this.programManager.getProgramsLeft().remove(p);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setFinished(true);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setAborted(true);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setRunning(false);
-		compiApp.getProgramManager().getProgramsLeft().remove(p);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setFinished(true);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setAborted(true);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setRunning(false);
+		compiApp.getProgramManager().getProgramsLeft().remove(program.getId());
 		// comprobamos sus dependencias para ver si es necesario abortar la
 		// ejecucion del programa o se puede seguir
 	}
 
-	public void programAborted(final Program p, final Exception e) {
+	public void programAborted(final Program program, final Exception e) {
 		System.out.println("program finished BAD - EXCEPTION");
 		// marcamos el programa como abortado
-		// this.programManager.getDAG().get(p.getId()).setAborted(true);
-		// this.programManager.getDAG().get(p.getId()).setRunning(false);
-		// this.programManager.getProgramsLeft().remove(p);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setFinished(true);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setAborted(true);
-		compiApp.getProgramManager().getDAG().get(p.getId()).setRunning(false);
-		compiApp.getProgramManager().getProgramsLeft().remove(p);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setFinished(true);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setAborted(true);
+		compiApp.getProgramManager().getDAG().get(program.getId())
+				.setRunning(false);
+		compiApp.getProgramManager().getProgramsLeft().remove(program.getId());
 		// comprobamos sus dependencias para ver si es necesario abortar la
 		// ejecucion del programa o se puede seguir
 	}
