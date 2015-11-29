@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline xmlns="http://www.esei.uvigo.es/pipeline" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<programs>
+		<program id="ID-1">
+			<exec>
+				mkdir hola/
+			</exec>
+		</program>
+		<program id="ID-2" dependsOn="ID-1">
+			<exec>
+				sleep 3
+			</exec>
+		</program>
+		<program id="ID-3" dependsOn="ID-1">
+			<exec>
+				sleep 10
+			</exec>
+		</program>
+		<program id="ID-4" dependsOn="ID-2,ID-3">
+			<exec>
+				${example1} ${i}
+			</exec>
+		</program>
+		<program id="ID-5" dependsOn="ID-2">
+			<exec>
+				sleep 4
+			</exec>
+		</program>
+	</programs>
+	<params>
+		<param type="String" name="exampleParam1" />
+		<param type="Number" name="exampleParam2" />
+	</params>
+</pipeline>

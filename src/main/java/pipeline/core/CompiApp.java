@@ -65,16 +65,18 @@ public class CompiApp implements Runnable {
 						}
 						System.out.println("DESPUES DEL FOR, PROGRAMS LEFT: "+programManager.getProgramsLeft());
 					}
-					this.wait();
+//					System.out.println("ANTES DEL WAIT");
+//					this.wait();
+//					System.out.println("DESPUES DEL WAIT");
 				} // cierre synchronized
-				this.notify();
+//				this.notify();
 				executorService.shutdown();
 			} catch (JAXBException | InterruptedException
 					| ExecutionException e) {
 				e.printStackTrace();
 			}
 		} // cierre if validacion XML
-		System.out.println("------Fin programa------");
+		System.out.println("------Fin compiapp------");
 	}// cierre run
 
 	private void initializePipelines(final String xmlPipelineFile,
