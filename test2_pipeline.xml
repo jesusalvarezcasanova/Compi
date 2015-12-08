@@ -3,17 +3,17 @@
 	<programs>
 		<program id="ID-1">
 			<exec>
-				mkdir hola/
+				sleep 2
 			</exec>
 		</program>
 		<program id="ID-2" dependsOn="ID-1">
 			<exec>
-				sleep 3
+				mkdir hola/
 			</exec>
 		</program>
 		<program id="ID-3" dependsOn="ID-1">
 			<exec>
-				sleep 10
+				sleep 2
 			</exec>
 		</program>
 		<program id="ID-4" dependsOn="ID-2,ID-3">
@@ -23,7 +23,27 @@
 		</program>
 		<program id="ID-5" dependsOn="ID-2">
 			<exec>
-				sleep 4
+				sleep 2
+			</exec>
+		</program>
+		<program id="ID-6" dependsOn="ID-3">
+			<exec>
+				sleep 2
+			</exec>
+		</program>
+		<program id="ID-7" dependsOn="ID-6">
+			<exec>
+				sleep 2
+			</exec>
+		</program>
+		<program id="ID-8" dependsOn="ID-7">
+			<exec>
+				sleep 2
+			</exec>
+		</program>
+		<program id="ID-9" dependsOn="ID-8,ID-5">
+			<exec>
+				sleep 2
 			</exec>
 		</program>
 	</programs>
