@@ -3,10 +3,8 @@ package pipeline.core;
 import static pipeline.validation.DOMparsing.validateXMLSchema;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -15,10 +13,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.xml.sax.SAXException;
+
+import pipeline.interfaces.ProgramExecutionHandler;
 import pipeline.validation.PipelineParser;
 import pipeline.validation.Resolver;
 
-public class CompiApp implements Runnable {
+public class CompiApp implements ProgramExecutionHandler {
 
 	private Pipeline pipeline;
 	private ProgramManager programManager;
@@ -26,60 +27,47 @@ public class CompiApp implements Runnable {
 	private Resolver resolver;
 	private ExecutorService executorService;
 	private ProgramRunnable programRunnable;
-	private Future future;
+	private Future<?> future;
 	private final String[] args;
 
 	public CompiApp(final String[] args) {
 		this.args = args;
 	}
 
-	@Override
 	public void run() {
 		final String xmlPipelineFile = this.args[0];
 		final String xmlParamsFile = this.args[1];
 		final String threadNumber = this.args[2];
 		final URL xsdPath = Thread.currentThread().getContextClassLoader()
 				.getResource("xsd/pipeline.xsd");
-		// comprobamos si el fichero XML valida con el fichero XSD
-		if (validateXMLSchema(xmlPipelineFile, xsdPath.getPath())) {
-			try {
-				initializePipeline(xmlPipelineFile, xmlParamsFile,
-						threadNumber);
+		try {
+			// comprobamos si el fichero XML valida con el fichero XSD
+			validateXMLSchema(xmlPipelineFile, xsdPath.getPath());
+			initializePipeline(xmlPipelineFile, xmlParamsFile, threadNumber);
 
-				// bloque de ejecucion
-				synchronized (this) {
-					while (!programManager.getProgramsLeft().isEmpty()) {
-						for (final Program programToRun : programManager
-								.getRunnablePrograms()) {
-							programRunnable = new ProgramRunnable(programToRun,
-									this);
-							// marcamos el programa actual con el flag de
-							// ejecucion
-							programToRun.setRunning(true);
+			// bloque de ejecucion
+			synchronized (this) {
+				while (!programManager.getProgramsLeft().isEmpty()) {
+					for (final Program programToRun : programManager
+							.getRunnablePrograms()) {
+						programRunnable = new ProgramRunnable(programToRun,
+								this);
+						// marcamos el programa actual con el flag de
+						// ejecucion
+						this.programStarted(programToRun);
+						setFuture(executorService.submit(programRunnable));
 
-							future = executorService.submit(programRunnable);
-							future.get();
-							if (future.isDone()) {
-								System.out.println("Future done");
-							} else {
-								System.out.println("Future NOT done");
-							}
-						}
-						System.out.println("DESPUES DEL FOR, PROGRAMS LEFT: "
-								+ programManager.getProgramsLeft());
 					}
-					// System.out.println("ANTES DEL WAIT");
-					// this.wait();
-					// System.out.println("DESPUES DEL WAIT");
-				} // cierre synchronize
-					// this.notify();
-				executorService.shutdown();
-			} catch (JAXBException | InterruptedException
-					| ExecutionException e) {
-				e.printStackTrace();
-			}
-		} // cierre if validacion XML
-		System.out.println("------Fin compiapp------");
+					System.out.println("DESPUES DEL FOR, PROGRAMS LEFT: "
+							+ programManager.getProgramsLeft());
+					this.wait();
+				}
+			} // cierre synchronize
+			executorService.shutdown();
+		} catch (JAXBException | InterruptedException | SAXException
+				| IOException e) {
+			e.printStackTrace();
+		}
 	}// cierre run
 
 	private void initializePipeline(final String xmlPipelineFile,
@@ -113,6 +101,23 @@ public class CompiApp implements Runnable {
 		}
 	}
 
+	synchronized public void programFinished(Program p) {
+		this.getProgramManager().programFinished(p);
+		this.notify();
+
+	}
+
+	synchronized public void programAborted(Program p, Exception e) {
+		this.getProgramManager().programAborted(p, e);
+		this.notify();
+
+	}
+
+	public void programStarted(Program p) {
+		this.getProgramManager().programStarted(p);
+
+	}
+
 	public Pipeline getPipeline() {
 		return pipeline;
 	}
@@ -132,4 +137,13 @@ public class CompiApp implements Runnable {
 	public ExecutorService getExecutorService() {
 		return executorService;
 	}
+
+	public Future<?> getFuture() {
+		return future;
+	}
+
+	public void setFuture(Future<?> future) {
+		this.future = future;
+	}
+
 }

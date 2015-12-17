@@ -7,7 +7,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ProgramManager {
+import pipeline.interfaces.ProgramExecutionHandler;
+
+public class ProgramManager implements ProgramExecutionHandler {
 
 	// Directed Acyclic Graph
 	private final Map<String, Program> DAG = new ConcurrentHashMap<String, Program>();
@@ -50,6 +52,8 @@ public class ProgramManager {
 	// atributo isFinished a true
 	private boolean checkProgramDependencies(final Program program) {
 		int count = 0;
+		if (program.getDependsOn() == null)
+			return true;
 		final String[] dependsArray = program.getDependsOn().split(",");
 		for (final String s : dependsArray) {
 			final Program programToCheck = DAG.get(s);
@@ -69,10 +73,12 @@ public class ProgramManager {
 		for (final String programs : this.programsLeft) {
 			final Program program = DAG.get(programs);
 			if (program.getDependsOn() != null) {
-				for (final String dependsOn : program.getDependsOn().split(",")) {
+				for (final String dependsOn : program.getDependsOn()
+						.split(",")) {
 					if (!DAG.containsKey(dependsOn)) {
 						throw new IllegalArgumentException(
-								"El/los IDs contenidos en el atributo dependsOn del programa " + program.getId()
+								"El/los IDs contenidos en el atributo dependsOn del programa "
+										+ program.getId()
 										+ " no son correctos");
 					}
 				}
@@ -86,7 +92,8 @@ public class ProgramManager {
 			if (entry.getValue().getDependsOn() != null) {
 				// añadimos las dependencias a la lista del programa
 				// correspondiente
-				for (final String dependsOn : entry.getValue().getDependsOn().split(",")) {
+				for (final String dependsOn : entry.getValue().getDependsOn()
+						.split(",")) {
 					dependencies.get(dependsOn).add(entry.getKey());
 				}
 			}
@@ -97,7 +104,8 @@ public class ProgramManager {
 	private void setUpDependencies() {
 		for (final Map.Entry<String, Program> entry : DAG.entrySet()) {
 			// comprobamos si el programa es dependencia de otro
-			for (final Map.Entry<String, Set<String>> entry2 : dependencies.entrySet()) {
+			for (final Map.Entry<String, Set<String>> entry2 : dependencies
+					.entrySet()) {
 				if (entry2.getValue().contains(entry.getKey())) {
 					entry2.getValue().addAll(dependencies.get(entry.getKey()));
 				}
@@ -105,7 +113,7 @@ public class ProgramManager {
 		}
 	}
 
-	public Map<String, Program> getDAG() {
+	private Map<String, Program> getDAG() {
 		return DAG;
 	}
 
@@ -117,4 +125,24 @@ public class ProgramManager {
 		return dependencies;
 	}
 
+	public void programFinished(Program p) {
+		this.getDAG().get(p.getId()).setFinished(true);
+		this.getDAG().get(p.getId()).setRunning(false);
+
+	}
+
+	public void programAborted(Program p, Exception e) {
+		this.getDAG().get(p.getId()).setAborted(true);
+		this.getDAG().get(p.getId()).setRunning(false);
+		// // comprobamos sus dependencias para ver si es necesario abortar la
+		// ejecucion del programa o se puede seguir
+		for (String programToAbort : this.getDependencies().get(p.getId())) {
+			this.getProgramsLeft().remove(programToAbort);
+		}
+	}
+
+	public void programStarted(Program p) {
+		this.getDAG().get(p.getId()).setRunning(true);
+		this.getProgramsLeft().remove(p.getId());
+	}
 }

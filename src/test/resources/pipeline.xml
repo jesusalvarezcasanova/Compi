@@ -13,8 +13,4 @@
 			</exec>
 		</program>
 	</programs>
-	<params>
-		<param type="String" name="exampleParam1" />
-		<param type="Number" name="exampleParam2" />
-	</params>
 </pipeline>

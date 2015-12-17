@@ -13,18 +13,13 @@ import org.xml.sax.SAXException;
 
 public class DOMparsing {
 
-	public static boolean validateXMLSchema(final String xmlPath, final String xsdPath) {
-		try {
-			final SchemaFactory factory = SchemaFactory
-					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final Schema schema = factory.newSchema(new File(xsdPath));
-			final Validator validator = schema.newValidator();
-			validator.setErrorHandler(new SimpleErrorHandler());
-			validator.validate(new StreamSource(new File(xmlPath)));
-		} catch (IOException | SAXException e) {
-			System.out.println("Exception: " + e.getMessage());
-			return false;
-		}
-		return true;
+	public static void validateXMLSchema(final String xmlPath,
+			final String xsdPath) throws SAXException, IOException {
+		final SchemaFactory factory = SchemaFactory
+				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		final Schema schema = factory.newSchema(new File(xsdPath));
+		final Validator validator = schema.newValidator();
+		validator.setErrorHandler(new SimpleErrorHandler());
+		validator.validate(new StreamSource(new File(xmlPath)));
 	}
 }

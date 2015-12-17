@@ -1,21 +1,32 @@
 package pipeline.tests;
 
-import java.net.URL;
-
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
-import pipeline.core.App;
 import pipeline.core.CompiApp;
+import pipeline.validation.DOMparsing;
 
 public class PipelineTests {
 
-	@Test
-	public void test1() throws Exception {
-		String[] args = { "test1_pipeline.xml", "test1_params.xml", "10" };
-		CompiApp compi = new CompiApp(args);
-		Thread testThread = new Thread(compi);
-		testThread.start();
-		testThread.join();
+	@Test(expected = SAXException.class)
+	public void testXSDSaxException() throws Exception {
+		DOMparsing
+				.validateXMLSchema(
+						ClassLoader
+								.getSystemResource(
+										"pipelineParsingException.xml")
+								.getFile(),
+						ClassLoader.getSystemResource("xsd/pipeline.xsd")
+								.getFile());
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testParamsException() throws Exception {
+		String[] args = {
+				ClassLoader.getSystemResource("pipelineParamsException.xml")
+						.getFile(),
+				ClassLoader.getSystemResource("params.xml").getFile(), "10" };
+		CompiApp compi = new CompiApp(args);
+		compi.run();
+	}
 }
